@@ -7,6 +7,7 @@ class User < ApplicationRecord
   scope :members , -> { where(type: 'Member') }
 
   # Model associations
+  has_and_belongs_to_many :lists
   # Validations
   validates_presence_of :username, :email, :password_digest
 
