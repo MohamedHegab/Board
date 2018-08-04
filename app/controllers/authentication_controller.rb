@@ -8,7 +8,7 @@ class AuthenticationController < ApplicationController
     json_response(auth_token: auth_token)
   end
 
-  privatew
+  private
 
   def auth_params
     params.permit(:email, :password)
