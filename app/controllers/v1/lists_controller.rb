@@ -1,5 +1,6 @@
 class V1::ListsController < ApplicationController
-  before_action :set_list, only: [:show, :update, :destroy]
+  before_action :set_list, only: [:show, :update, :destroy, :assign_member, :unassign_member]
+  before_action :set_user, only: [:assign_member, :unassign_member]
 
   def index
     # get current user lists
@@ -28,6 +29,17 @@ class V1::ListsController < ApplicationController
     @list.destroy
     head :no_content
   end
+
+  def assign_member
+    @list.users << @user
+    head :no_content
+  end
+
+  def unassign_member
+    @list.users.delete(@user)
+    head :no_content
+  end
+
   private
 
   def list_params
@@ -36,6 +48,10 @@ class V1::ListsController < ApplicationController
 
   def set_list
     @list = List.find(params[:id])
+  end
+
+  def set_user
+    @user = User.find(params[:user_id])
   end
 
 end

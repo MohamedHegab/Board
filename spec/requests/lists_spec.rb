@@ -1,14 +1,20 @@
 require 'rails_helper'
 
 RSpec.describe 'Lists API', type: :request do
-  # initialize test data
+  # initialize user
   let(:user) { create(:user) }
+  # initialize user
+  let(:member) { create(:member) }
   #create 10 lists
   let!(:lists) { create_list(:list, 10, created_by: user ,:users => [user]) }
   #create 10 cards
   let!(:cards) { create_list(:card, 10,list: lists.first , created_by: user ) }
   #let first list id
   let(:list_id) { lists.first.id }
+  #let user member id
+  let(:list_member_id) { lists.first.users.last.id }
+  #list members
+  let(:members) { lists.first.users }
   # authorize request
   let(:headers) { valid_headers }
 
@@ -110,6 +116,30 @@ RSpec.describe 'Lists API', type: :request do
   # Test suite for DELETE /lists/:id
   describe 'DELETE /lists/:id' do
     before { delete "/lists/#{list_id}" , params: {}, headers: headers}
+
+    it 'returns status code 204' do
+      expect(response).to have_http_status(204)
+    end
+  end
+
+  describe 'Assign User /lists/:id/assign_member/:user_id ' do
+    before { post "/lists/#{list_id}/assign_member/#{user.id}" , params: {}, headers: headers}
+
+    it 'returns status code 204' do
+      expect(list_member_id).to eq(user.id)
+    end
+
+    it 'returns status code 204' do
+      expect(response).to have_http_status(204)
+    end
+  end
+
+  describe 'Unassign User /lists/:id/unassign_member/:user_id ' do
+    before { post "/lists/#{list_id}/unassign_member/#{member.id}" , params: {}, headers: headers}
+
+    it 'returns status code 204' do
+      expect(members).not_to include(member)
+    end
 
     it 'returns status code 204' do
       expect(response).to have_http_status(204)
