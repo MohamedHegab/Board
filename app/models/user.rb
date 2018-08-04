@@ -8,6 +8,9 @@ class User < ApplicationRecord
 
   # Model associations
   has_and_belongs_to_many :lists
+  has_many :created_lists, foreign_key: :user_id, class_name: "List"
+  has_many :cards
+
   # Validations
   validates_presence_of :username, :email, :password_digest
 

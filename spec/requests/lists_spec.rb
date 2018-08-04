@@ -4,7 +4,9 @@ RSpec.describe 'Lists API', type: :request do
   # initialize test data
   let(:user) { create(:user) }
   #create 10 lists
-  let!(:lists) { create_list(:list, 10, :users => [user]) }
+  let!(:lists) { create_list(:list, 10, created_by: user ,:users => [user]) }
+  #create 10 cards
+  let!(:cards) { create_list(:card, 10,list: lists.first , created_by: user ) }
   #let first list id
   let(:list_id) { lists.first.id }
   # authorize request
@@ -25,32 +27,34 @@ RSpec.describe 'Lists API', type: :request do
   end
 
   # Test suite for GET /lists/:id
-  # describe 'GET /lists/:id' do
-  #   before { get "/lists/#{list_id}" , params: {}, headers: headers}
-  #
-  #   context 'when the record exists' do
-  #     it 'returns the list' do
-  #       expect(json).not_to be_empty
-  #       expect(json['id']).to eq(list_id)
-  #     end
-  #
-  #     it 'returns status code 200' do
-  #       expect(response).to have_http_status(200)
-  #     end
-  #   end
-  #
-  #   context 'when the record does not exist' do
-  #     let(:list_id) { 100 }
-  #
-  #     it 'returns status code 404' do
-  #       expect(response).to have_http_status(404)
-  #     end
-  #
-  #     it 'returns a not found message' do
-  #       expect(response.body).to match(/Couldn't find Todo/)
-  #     end
-  #   end
-  # end
+  describe 'GET /lists/:id' do
+    before { get "/lists/#{list_id}" , params: {}, headers: headers}
+
+    context 'when the record exists' do
+      let(:extra_user) { create(:user) }
+      let(:card) { create(:card,list: lists.first , created_by: extra_user ) }
+      it 'returns the cards' do
+        expect(json).not_to be_empty
+        expect(json.size).to eq(10)
+      end
+
+      it 'returns status code 200' do
+        expect(response).to have_http_status(200)
+      end
+    end
+
+    context 'when the record does not exist' do
+      let(:list_id) { 100 }
+
+      it 'returns status code 404' do
+        expect(response).to have_http_status(404)
+      end
+
+      it 'returns a not found message' do
+        expect(response.body).to match(/Couldn't find List with 'id'=#{list_id}/)
+      end
+    end
+  end
 
   # # Test suite for POST /lists
   describe 'POST /lists' do

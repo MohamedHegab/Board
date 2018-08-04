@@ -9,13 +9,14 @@ class V1::ListsController < ApplicationController
 
 
   def create
-    # create lists belonging to current user
-    @list = current_user.lists.create!(list_params)
+    # create lists belonging to current user & add current user as a member
+    @list = current_user.created_lists.create!(list_params)
+    current_user.lists << @list
     json_response(@list, :created)
   end
 
   def show
-
+    json_response(@list.cards)
   end
 
   def update
@@ -23,7 +24,6 @@ class V1::ListsController < ApplicationController
     head :no_content
   end
 
-  # DELETE /todos/:todo_id/items/:id
   def destroy
     @list.destroy
     head :no_content
@@ -37,4 +37,5 @@ class V1::ListsController < ApplicationController
   def set_list
     @list = List.find(params[:id])
   end
+
 end
