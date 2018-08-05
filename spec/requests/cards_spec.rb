@@ -83,7 +83,7 @@ RSpec.describe 'Cards API' do
       end
 
       it 'returns a failure message' do
-        expect(response.body).to match(/Validation failed: Cards is invalid/)
+        expect(response.body).to match(/Validation failed: Title can't be blank/)
       end
     end
   end

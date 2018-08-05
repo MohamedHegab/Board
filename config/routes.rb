@@ -6,8 +6,14 @@ Rails.application.routes.draw do
         post '/assign_member/:user_id', to: 'lists#assign_member'
         post 'unassign_member/:user_id', to: 'lists#unassign_member'
       end
-      resources :cards
-    end
+
+      resources :cards do
+        resources :comments do
+          resources :comments
+        end
+      end
+
+  end
   end
 
   post 'signup', to: 'users#create'

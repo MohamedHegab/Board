@@ -15,8 +15,7 @@ class V1::CardsController < ApplicationController
 
   # POST /lists/:list_id/cards
   def create
-    @list.cards.create(card_params).created_by = current_user
-    @list.save!
+    @list.cards.create!(card_params)
     json_response(@list, :created)
   end
 
@@ -35,7 +34,7 @@ class V1::CardsController < ApplicationController
   private
 
   def card_params
-    params.permit(:title, :description)
+    params.permit(:title, :description).merge(user_id: current_user.id)
   end
 
   def set_list
@@ -43,7 +42,8 @@ class V1::CardsController < ApplicationController
   end
 
   def set_user
-    @cards = @list.cards.created_by(current_user)
+    # @cards = Card.created_by(current_user).order_by_comments
+    @cards =  @list.cards.where(user_id: current_user.id).left_joins(:comments).group(:id).order(Arel.sql('COUNT(comments.id) DESC'))
   end
 
   def set_list_card
