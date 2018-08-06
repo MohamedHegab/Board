@@ -11,4 +11,7 @@ class Card < ApplicationRecord
   # validation
   validates_presence_of :title
 
+  def created_user? user
+    self.created_by == user
+  end
 end

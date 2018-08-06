@@ -2,9 +2,11 @@ class V1::CardsController < ApplicationController
   before_action :set_list
   before_action :set_list_card, only: [:show, :update, :destroy]
   before_action :set_user, only: [:index]
+  before_action :authorize_user, only: [:update, :destroy]
 
   # GET /lists/:list_id/cards
   def index
+    authorize @list , policy_class: CardPolicy
     json_response(@cards)
   end
 
@@ -15,6 +17,7 @@ class V1::CardsController < ApplicationController
 
   # POST /lists/:list_id/cards
   def create
+    authorize @list , policy_class: CardPolicy
     @list.cards.create!(card_params)
     json_response(@list, :created)
   end
@@ -48,5 +51,9 @@ class V1::CardsController < ApplicationController
 
   def set_list_card
     @card = @list.cards.find_by!(id: params[:id]) if @list
+  end
+
+  def authorize_user
+    authorize @card
   end
 end

@@ -10,32 +10,36 @@ class V1::ListsController < ApplicationController
 
 
   def create
-    # create lists belonging to current user & add current user as a member
     @list = current_user.created_lists.create!(list_params)
-    current_user.lists << @list
+    authorize @list
     json_response(@list, :created)
   end
 
   def show
+    authorize @list
     json_response(@list.cards)
   end
 
   def update
+    authorize @list
     @list.update(list_params)
     head :no_content
   end
 
   def destroy
+    authorize @list
     @list.destroy
     head :no_content
   end
 
   def assign_member
+    authorize @list
     @list.users << @user
     head :no_content
   end
 
   def unassign_member
+    authorize @list
     @list.users.delete(@user)
     head :no_content
   end

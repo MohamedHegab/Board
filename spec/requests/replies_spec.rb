@@ -23,7 +23,6 @@ RSpec.describe 'Comments API' do
       end
 
       it 'returns all list cards' do
-        # binding.pry
         expect(json).not_to be_empty
       end
     end

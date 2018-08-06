@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.describe 'Cards API' do
   # Initialize the test data
-  let(:user) { create(:user) }
+  let(:user) { create(:admin) }
   let!(:list) { create(:list, created_by: user) }
   let!(:cards) { create_list(:card, 20, list: list, created_by: user) }
   let(:list_id) { list.id }
@@ -90,6 +90,7 @@ RSpec.describe 'Cards API' do
 
   # Test suite for PUT /lists/:list_id/cards/:id
   describe 'PUT /lists/:list_id/cards/:id' do
+
     let(:valid_attributes) { { title: 'card_title' }.to_json }
 
     before { put "/lists/#{list_id}/cards/#{id}", params: valid_attributes  , headers: headers }

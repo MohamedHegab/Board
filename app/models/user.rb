@@ -14,7 +14,4 @@ class User < ApplicationRecord
 
   # Validations
   validates_presence_of :username, :email, :password_digest
-
 end
-class Admin < User;end
-class Member < User;end

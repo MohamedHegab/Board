@@ -2,11 +2,11 @@ require 'rails_helper'
 
 RSpec.describe 'Lists API', type: :request do
   # initialize user
-  let(:user) { create(:user) }
+  let(:user) { create(:admin) }
   # initialize user
   let(:member) { create(:member) }
   #create 10 lists
-  let!(:lists) { create_list(:list, 10, created_by: user ,:users => [user]) }
+  let!(:lists) { create_list(:list, 10, created_by: user ) }
   #create 10 cards
   let!(:cards) { create_list(:card, 10,list: lists.first , created_by: user ) }
   #let first list id
