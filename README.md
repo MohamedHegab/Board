@@ -41,3 +41,9 @@ mv config/application.yml config/application_example.yml
 ```
  rails db:create db:migrate db:seed
 ```
+
+### Test
+```
+bundle exec rspec
+```
+~~Failed~~ All green!
